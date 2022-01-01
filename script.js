@@ -1,23 +1,24 @@
 window.onload = () => {
-  function randomChoice(arr) {
+  function computerPlay(arr) {
     return arr[Math.floor(Math.random() * arr.length)];
   }
 
-  function computerPlay() {
-    let arr = ["Rock", "Paper", "Scissors"];
-    return randomChoice(arr);
+  function capitalise(str) {
+    return (
+      str.slice(0, 1).toUpperCase() +
+      str.slice(0 - (str.length - 1)).toLowerCase()
+    ).trim();
   }
 
-  function player(msg = "Type Rock, Paper or Scissors:") {
-    let playerChoice = prompt(msg);
-    if (
-      playerChoice.toUpperCase().trim() === "ROCK" ||
-      playerChoice.toUpperCase().trim() === "PAPER" ||
-      playerChoice.toUpperCase().trim() === "SCISSORS"
-    ) {
+  function player(msg, arr) {
+    let playerChoice = capitalise(prompt(msg));
+    if (arr.includes(playerChoice)) {
       return playerChoice;
     } else {
-      return player("Please make a valid choice. Rock, Paper or Scissors:");
+      return player(
+        "Please make a valid choice. Rock, Paper or Scissors:",
+        arr
+      );
     }
   }
 
@@ -30,41 +31,24 @@ window.onload = () => {
     }
   }
 
-  function playRound(playerChoice, computerChoice) {
-    if (playerChoice.toUpperCase().trim() === "ROCK") {
-      if (computerChoice === "Rock") {
-        return "It's a draw!";
-      } else if (computerChoice === "Paper") {
-        return "You lose. Paper beats rock!";
-      } else {
-        return "You win! Rock beats Scissors!";
-      }
-    } else if (playerChoice.toUpperCase().trim() === "PAPER") {
-      if (computerChoice === "Rock") {
-        return "You win! Paper beats Rock!";
-      } else if (computerChoice === "Paper") {
-        return "It's a draw!";
-      } else {
-        return "You lose. Scissors beats Paper!";
-      }
+  function playRound(playerChoice, computerChoice, winCases) {
+    if (playerChoice === computerChoice) {
+      return "It's a draw!";
+    } else if (winCases[playerChoice] === computerChoice) {
+      return `You win! ${playerChoice} beats ${computerChoice}`;
     } else {
-      if (computerChoice === "Rock") {
-        return "You lose. Rock beats Scissors!";
-      } else if (computerChoice === "Paper") {
-        return "You win! Scissors beats Paper!";
-      } else {
-        return "It's a draw!";
-      }
+      return `Sorry! ${computerChoice} beats ${playerChoice}`;
     }
   }
 
   function game() {
+    const arr = ["Rock", "Paper", "Scissors"];
+    const winCases = { Rock: "Scissors", Paper: "Rock", Scissors: "Paper" };
     games = numberofGames();
-
     for (let i = 0; i < games; i++) {
-      let playerChoice = player();
-      let computerChoice = computerPlay();
-      console.log(playRound(playerChoice, computerChoice));
+      let playerChoice = player("Type Rock, Paper or Scissors:", arr);
+      let computerChoice = computerPlay(arr);
+      console.log(playRound(playerChoice, computerChoice, winCases));
     }
   }
 
